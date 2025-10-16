@@ -1,10 +1,9 @@
-import { Session } from "inspector/promises"
-import NextAuth, { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
-import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt"
+import NextAuth, { NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import GoogleProvider from "next-auth/providers/google"
 
 
  const prisma = new PrismaClient();
@@ -16,6 +15,7 @@ providers: [
     clientId: process.env.GOOGLE_CLIENT_ID!,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET!
   }),
+
   CredentialsProvider({
     name:"Credentials",
     credentials:{
@@ -26,7 +26,10 @@ providers: [
       if(!credentials?.email || !credentials.password)
         return null
 
-      const user = await prisma.user.findUnique( {where: {email:credentials.email} })
+      const user = await prisma.user.findUnique( {
+        where: {email:credentials.email}
+       })
+       
       if(!user) return null
 
       const passwordMatch = await bcrypt.compare(credentials.password, user.hashedPassword!)
@@ -40,4 +43,4 @@ session:{
 }
 
 const handler = NextAuth(authOption)
-export {handler as GET, handler as POST}
+export { handler as GET, handler as POST }
