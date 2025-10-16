@@ -1,8 +1,7 @@
-import Link from "next/link";
-import  {NavigationMenuDemo } from "./components/navbar"
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { authOption } from "./api/auth/[...nextauth]/route";
-import { Span } from "next/dist/trace";
+import { NavigationMenuDemo } from "./components/navbar";
 
 export default async function Home() {
   const session = await getServerSession(authOption)
